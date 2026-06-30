@@ -1,0 +1,50 @@
+
+PERFORMANCE EVALUATION REPORT
+Educational RAG Assistant
+Generated: 2026-05-03 03:00:39
+
+============================================================
+PERFORMANCE METRICS
+============================================================
+
+First Response Time: 2.58 seconds
+Average Response Time: 1.57 seconds
+Document Processing Time: 175.88 seconds
+Total Queries Tested: 15
+
+============================================================
+QUALITY METRICS
+============================================================
+
+Average Retrieval Score: 0.99
+Average Response Length: 2077 characters
+
+============================================================
+QUERY DISTRIBUTION
+============================================================
+
+Definition: 5 queries
+Explanation: 4 queries
+Comparison: 2 queries
+Application: 2 queries
+Analysis: 2 queries
+
+============================================================
+RESPONSE LENGTH DISTRIBUTION
+============================================================
+
+Short (0-100 chars): 0
+Medium (100-300 chars): 0
+Long (300-500 chars): 0
+Very Long (500+ chars): 15
+
+============================================================
+CONCLUSION
+============================================================
+
+The RAG system demonstrates solid performance with:
+- Reasonable response times for complex queries
+- Good retrieval quality based on test results
+- Diverse query handling capabilities
+- Appropriate response lengths for different query types
+

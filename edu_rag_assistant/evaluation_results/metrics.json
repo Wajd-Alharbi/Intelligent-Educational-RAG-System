@@ -1,0 +1,25 @@
+{
+  "performance": {
+    "first_response_time": 2.5841712951660156,
+    "average_response_time": 1.57443528175354,
+    "document_processing_time": 175.87913608551025,
+    "total_queries": 15
+  },
+  "quality": {
+    "average_retrieval_score": 0.9866666666666666,
+    "average_response_length": 2077.4
+  },
+  "query_distribution": {
+    "Definition": 5,
+    "Explanation": 4,
+    "Comparison": 2,
+    "Application": 2,
+    "Analysis": 2
+  },
+  "response_length_distribution": {
+    "short": 0,
+    "medium": 0,
+    "long": 0,
+    "very_long": 15
+  }
+}
