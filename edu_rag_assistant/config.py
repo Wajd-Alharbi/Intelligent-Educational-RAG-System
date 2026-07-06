@@ -4,7 +4,7 @@ Groq API and model settings
 """
 
 # Groq API Configuration
-GROQ_API_KEY = "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"
+GROQ_API_KEY = ""
 
 # Language Model Configuration
 MODEL_NAME = "llama-3.3-70b-versatile"
