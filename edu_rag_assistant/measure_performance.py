@@ -10,7 +10,6 @@ from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_core.embeddings import Embeddings
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
@@ -19,38 +18,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-# Import configuration
-from config import GROQ_API_KEY, MODEL_NAME, CHUNK_SIZE, CHUNK_OVERLAP, K_RETRIEVAL
+# Import configuration and the shared RAG components used by the app
+from config import get_groq_api_key, MODEL_NAME, TEMPERATURE, CHUNK_SIZE, CHUNK_OVERLAP, K_RETRIEVAL
+from rag_core import SimpleEmbeddings
 
-os.environ["GROQ_API_KEY"] = GROQ_API_KEY
-
-
-class SimpleEmbeddings(Embeddings):
-    """Lightweight embeddings implementation"""
-    
-    def embed_documents(self, texts):
-        embeddings = []
-        for text in texts:
-            embedding = self._text_to_embedding(text)
-            embeddings.append(embedding)
-        return embeddings
-    
-    def embed_query(self, text):
-        return self._text_to_embedding(text)
-    
-    def _text_to_embedding(self, text):
-        text_lower = text.lower()
-        embedding = np.zeros(256)
-        
-        for char in text_lower:
-            if ord(char) < 256:
-                embedding[ord(char)] += 1
-        
-        norm = np.linalg.norm(embedding)
-        if norm > 0:
-            embedding = embedding / norm
-        
-        return embedding.tolist()
+GROQ_API_KEY = get_groq_api_key()
+if not GROQ_API_KEY:
+    raise SystemExit("GROQ_API_KEY is not set. Add it to .env or .streamlit/secrets.toml (see README).")
 
 
 class PerformanceMeasurer:
@@ -103,8 +77,8 @@ class PerformanceMeasurer:
         # Initialize LLM
         self.llm = ChatGroq(
             model=MODEL_NAME,
-            temperature=0.7,
-            groq_api_key=GROQ_API_KEY
+            temperature=TEMPERATURE,
+            api_key=GROQ_API_KEY
         )
         
         processing_time = time.time() - start_time
