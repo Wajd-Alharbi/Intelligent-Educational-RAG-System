@@ -1,15 +1,13 @@
-# Core Dependencies
-langchain>=0.1.0
-langchain-community>=0.0.30
-langchain-groq>=0.1.0
-streamlit>=1.31.0
+# App
+streamlit>=1.40.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-text-splitters>=0.3.0
+langchain-groq>=0.2.0
 pypdf>=4.0.0
-python-dotenv>=1.0.0
-faiss-cpu>=1.7.4
-
-# Lightweight Embeddings (no torch required)
-langchain-huggingface>=0.0.1
-
-# Additional utilities
-groq>=0.4.0
+faiss-cpu>=1.8.0
 numpy>=1.24.0
+python-dotenv>=1.0.0
+
+# Evaluation scripts only (measure_performance.py / evaluation_metrics.py)
+matplotlib>=3.7.0
