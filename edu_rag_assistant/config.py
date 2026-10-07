@@ -36,7 +36,7 @@ def get_groq_api_key():
 
 
 # Language Model Configuration
-MODEL_NAME = _get_setting("GROQ_MODEL", "llama-3.3-70b-versatile")
+MODEL_NAME = _get_setting("GROQ_MODEL", "openai/gpt-oss-120b")
 TEMPERATURE = float(_get_setting("GROQ_TEMPERATURE", "0.3"))
 
 # Document Processing Configuration

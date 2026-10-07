@@ -7,7 +7,7 @@
 - **Chat interface** with streaming answers and conversation history
 - **Cited answers**: every response lists the source file and page of each passage used
 - **Bring your own PDFs** or use the bundled deep-learning textbooks
-- **Fast generation** with Groq (`llama-3.3-70b-versatile` by default, configurable)
+- **Fast generation** with Groq (`openai/gpt-oss-120b` by default, configurable)
 - **Lightweight retrieval**: hashed bag-of-words embeddings + FAISS (no torch / GPU needed)
 - **Secure by default**: the API key lives in Streamlit secrets or environment variables, never in the code
 - **Clear error messages** for invalid keys, rate limits, unavailable models and network issues
@@ -33,7 +33,7 @@ User question ──► embed ──► top-k similarity search (k = 4, adjustab
 
 | Component | Technology |
 |-----------|-----------|
-| LLM | Groq API (`llama-3.3-70b-versatile`) |
+| LLM | Groq API (`openai/gpt-oss-120b`) |
 | Embeddings | `SimpleEmbeddings` — custom hashing-trick word embeddings |
 | Vector store | FAISS |
 | Orchestration | LangChain |
@@ -83,7 +83,7 @@ Secrets / environment variables:
 | Name | Required | Default | Description |
 |------|----------|---------|-------------|
 | `GROQ_API_KEY` | yes | — | Groq API key |
-| `GROQ_MODEL` | no | `llama-3.3-70b-versatile` | Any chat model available on Groq |
+| `GROQ_MODEL` | no | `openai/gpt-oss-120b` | Any chat model available on Groq |
 | `GROQ_TEMPERATURE` | no | `0.3` | Sampling temperature |
 
 Retrieval settings (`CHUNK_SIZE`, `CHUNK_OVERLAP`, `K_RETRIEVAL`) are in `edu_rag_assistant/config.py`.
