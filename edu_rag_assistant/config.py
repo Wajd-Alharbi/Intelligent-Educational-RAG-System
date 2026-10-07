@@ -35,8 +35,16 @@ def get_groq_api_key():
     return _get_setting("GROQ_API_KEY", "") or ""
 
 
+DEFAULT_MODEL = "openai/gpt-oss-120b"
+
+
+def get_model_name():
+    """Return the Groq model to use. Read on every call so a change in secrets takes effect on the next rerun."""
+    return _get_setting("GROQ_MODEL", DEFAULT_MODEL) or DEFAULT_MODEL
+
+
 # Language Model Configuration
-MODEL_NAME = _get_setting("GROQ_MODEL", "openai/gpt-oss-120b")
+MODEL_NAME = get_model_name()
 TEMPERATURE = float(_get_setting("GROQ_TEMPERATURE", "0.3"))
 
 # Document Processing Configuration

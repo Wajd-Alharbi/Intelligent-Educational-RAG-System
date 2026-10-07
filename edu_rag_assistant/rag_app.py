@@ -7,7 +7,7 @@ import time
 
 import streamlit as st
 
-from config import DOCUMENTS_PATH, K_RETRIEVAL, MODEL_NAME, get_groq_api_key
+from config import DOCUMENTS_PATH, K_RETRIEVAL, get_groq_api_key, get_model_name
 from rag_core import (
     build_vector_store,
     create_llm,
@@ -123,6 +123,7 @@ for key, value in defaults.items():
     st.session_state.setdefault(key, value)
 
 api_key = get_groq_api_key()
+model_name = get_model_name()
 
 
 def escape_html(text):
@@ -158,7 +159,7 @@ with st.sidebar:
         st.markdown('<span class="status-pill"><span class="dot ok"></span>Groq API connected</span>', unsafe_allow_html=True)
     else:
         st.markdown('<span class="status-pill"><span class="dot off"></span>Groq API key missing</span>', unsafe_allow_html=True)
-    st.caption(f"Model: `{MODEL_NAME}`")
+    st.caption(f"Model: `{model_name}`")
 
     st.divider()
     st.markdown("#### Knowledge base")
@@ -278,7 +279,7 @@ else:
             if message.get("sources"):
                 render_sources(message["sources"])
             if message.get("elapsed"):
-                st.caption(f"⏱ {message['elapsed']:.1f}s · {MODEL_NAME}")
+                st.caption(f"⏱ {message['elapsed']:.1f}s · {message.get('model', model_name)}")
 
     # Suggested questions for an empty chat on the sample library
     if not st.session_state.messages and st.session_state.kb_label == "Sample textbooks":
@@ -305,7 +306,7 @@ if question and st.session_state.vector_store is not None and api_key:
         try:
             with st.spinner("Searching the documents…"):
                 docs = retrieve(st.session_state.vector_store, question, k=top_k)
-            response = st.write_stream(stream_answer(get_llm(api_key, MODEL_NAME), question, docs))
+            response = st.write_stream(stream_answer(get_llm(api_key, model_name), question, docs))
             elapsed = time.time() - start
             sources = [
                 {
@@ -316,12 +317,12 @@ if question and st.session_state.vector_store is not None and api_key:
                 for doc in docs
             ]
             render_sources(sources)
-            st.caption(f"⏱ {elapsed:.1f}s · {MODEL_NAME}")
+            st.caption(f"⏱ {elapsed:.1f}s · {model_name}")
             st.session_state.messages.append(
-                {"role": "assistant", "content": response, "sources": sources, "elapsed": elapsed}
+                {"role": "assistant", "content": response, "sources": sources, "elapsed": elapsed, "model": model_name}
             )
         except Exception as error:
-            message = describe_llm_error(error)
+            message = describe_llm_error(error, model_name)
             st.error(message)
             st.session_state.messages.pop()  # drop the unanswered question
 

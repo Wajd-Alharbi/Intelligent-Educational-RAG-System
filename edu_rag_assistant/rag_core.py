@@ -18,7 +18,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from config import CHUNK_OVERLAP, CHUNK_SIZE, K_RETRIEVAL, MODEL_NAME, TEMPERATURE
+from config import CHUNK_OVERLAP, CHUNK_SIZE, K_RETRIEVAL, TEMPERATURE, get_model_name
 
 # pypdf logs a warning for every unusual font in the textbooks; keep the console clean
 logging.getLogger("pypdf").setLevel(logging.ERROR)
@@ -110,11 +110,11 @@ def build_vector_store(documents):
     return store, len(chunks)
 
 
-def create_llm(api_key, model_name=MODEL_NAME, temperature=TEMPERATURE):
+def create_llm(api_key, model_name=None, temperature=TEMPERATURE):
     """Create the Groq chat model."""
     from langchain_groq import ChatGroq
 
-    return ChatGroq(model=model_name, temperature=temperature, api_key=api_key, max_retries=2)
+    return ChatGroq(model=model_name or get_model_name(), temperature=temperature, api_key=api_key, max_retries=2)
 
 
 PROMPT = ChatPromptTemplate.from_messages(
@@ -158,7 +158,7 @@ def answer(llm, question, docs):
     return chain.invoke({"context": format_context(docs), "question": question})
 
 
-def describe_llm_error(error):
+def describe_llm_error(error, model_name=None):
     """Turn Groq / network exceptions into a short actionable message."""
     text = str(error)
     lowered = text.lower()
@@ -167,7 +167,10 @@ def describe_llm_error(error):
     if "429" in text or "rate limit" in lowered:
         return "Groq rate limit reached (429). Wait a moment and try again."
     if "model" in lowered and ("decommissioned" in lowered or "not found" in lowered or "does not exist" in lowered):
-        return f"The model '{MODEL_NAME}' is not available on Groq. Set GROQ_MODEL in your secrets to a current model."
+        return (
+            f"The model '{model_name or get_model_name()}' is not available on Groq. "
+            "Set GROQ_MODEL in your secrets to a current model (see console.groq.com/docs/models)."
+        )
     if "connection" in lowered or "timeout" in lowered:
         return "Could not reach the Groq API. Check your internet connection and try again."
     return f"Unexpected error from the language model: {text}"
